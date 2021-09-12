@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "382594764365",
+    "project_id": "grumbler-76975",
+    "storage_bucket": "grumbler-76975.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:382594764365:android:f30389f2ac9517435d5604",
+        "android_client_info": {
+          "package_name": "com.gricube.grumbler"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "382594764365-f3denh2t1ujaa7oq3obvspg5g9t29ja4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAaorefHmJY9PrKMYAGwjxX5txmP5dVKw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "382594764365-f3denh2t1ujaa7oq3obvspg5g9t29ja4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
