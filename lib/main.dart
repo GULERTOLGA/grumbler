@@ -5,18 +5,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 void main() {
-
   WidgetsFlutterBinding.ensureInitialized();
-
   runApp(MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Google Maps Demo',
       home: MapSample(),
     );
   }
@@ -29,24 +25,19 @@ class MapSample extends StatefulWidget {
 
 class MapSampleState extends State<MapSample> {
   Completer<GoogleMapController> _controller = Completer();
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
+  static final CameraPosition _initialPosition = CameraPosition(
     target: LatLng(39.416198, 35.017957),
     zoom: 5,
   );
 
 
-  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
-
-
   void _add(LatLng l) {
     var markerIdVal = "1";
     final MarkerId markerId = MarkerId(markerIdVal);
-
-    // creating a new MARKER
     final Marker marker = Marker(
       markerId: markerId,
-      draggable: true,
       position:l,
       infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
       onTap: () {
@@ -54,7 +45,6 @@ class MapSampleState extends State<MapSample> {
     );
 
     setState(() {
-      // adding a new marker to map
       markers[markerId] = marker;
     });
   }
@@ -78,7 +68,7 @@ class MapSampleState extends State<MapSample> {
     }
   }
 
-
+//test
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -91,7 +81,7 @@ class MapSampleState extends State<MapSample> {
         myLocationEnabled: true,
         myLocationButtonEnabled:true,
         markers:  Set<Marker>.of(markers.values),
-        initialCameraPosition: _kGooglePlex,
+        initialCameraPosition: _initialPosition,
         onLongPress: (l) => _add(l),
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
