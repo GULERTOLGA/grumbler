@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grumbler/bloc/location_bloc.dart';
 import 'package:grumbler/networking/authentication_api_client.dart';
 import 'package:grumbler/repository/authentication_repository.dart';
 import 'package:grumbler/view/screens/map_screen.dart';
@@ -37,6 +38,9 @@ class GrumblerMainApp extends StatelessWidget {
             BlocProvider<AuthenticationBloc>(
                 create: (_) => AuthenticationBloc(AuthenticationInitialState(),
                     RepositoryProvider.of<AuthenticationRepository>(_))),
+            BlocProvider<LocationBloc>(
+                create: (_) => LocationBloc(LocationInitialState())
+                  ..add(LocationStartedEvent())),
           ],
           child: MaterialApp(
             theme: defaultTheme(),

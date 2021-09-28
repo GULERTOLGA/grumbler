@@ -3,18 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grumbler/bloc/authentication_bloc.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignInScreen extends StatelessWidget {
+
   const SignInScreen({Key? key}) : super(key: key);
-
-  @override
-  _SignInScreenState createState() => _SignInScreenState();
-}
-
-class _SignInScreenState extends State<SignInScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
