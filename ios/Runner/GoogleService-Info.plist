@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>382594764365-s3cojnsr48i5n0fi01r4pvudum9otd6n.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.382594764365-s3cojnsr48i5n0fi01r4pvudum9otd6n</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCXM7esAyvR-784WahhT2T1ZxjYAmag_L4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>382594764365</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.gricube.grumbler</string>
+	<key>PROJECT_ID</key>
+	<string>grumbler-76975</string>
+	<key>STORAGE_BUCKET</key>
+	<string>grumbler-76975.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:382594764365:ios:f3f1192d7890d1eb5d5604</string>
+</dict>
+</plist>

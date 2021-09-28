@@ -1,101 +1,57 @@
-import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grumbler/networking/authentication_api_client.dart';
+import 'package:grumbler/repository/authentication_repository.dart';
+import 'package:grumbler/view/screens/map_screen.dart';
+import 'package:grumbler/view/screens/sign_in_screen.dart';
+import 'package:grumbler/view/theme.dart';
 
-void main() {
+import 'bloc/authentication_bloc.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  await Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
+  //TODO: ios implementation of only portrait orientation
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  runApp(const GrumblerMainApp());
 }
 
-class MyApp extends StatelessWidget {
+class GrumblerMainApp extends StatelessWidget {
+  const GrumblerMainApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MapSample(),
-    );
-  }
-}
-
-class MapSample extends StatefulWidget {
-  @override
-  State<MapSample> createState() => MapSampleState();
-}
-
-class MapSampleState extends State<MapSample> {
-  Completer<GoogleMapController> _controller = Completer();
-  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
-
-  static final CameraPosition _initialPosition = CameraPosition(
-    target: LatLng(39.416198, 35.017957),
-    zoom: 5,
-  );
-
-
-  void _add(LatLng l) {
-    var markerIdVal = "1";
-    final MarkerId markerId = MarkerId(markerIdVal);
-    final Marker marker = Marker(
-      markerId: markerId,
-      position:l,
-      infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
-      onTap: () {
-      },
-    );
-
-    setState(() {
-      markers[markerId] = marker;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getLocationPermission();
-
-  }
-
-
-  getLocationPermission() async {
-    var location = new Location();
-    try {
-      location.requestPermission(); //to lunch location permission popup
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        print('Permission denied');
-      }
-    }
-  }
-
-//test
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      resizeToAvoidBottomInset: true,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: GoogleMap(
-      mapToolbarEnabled: false,
-        padding: EdgeInsets.only(top: 40.0,),
-      mapType: MapType.normal,
-        myLocationEnabled: true,
-        myLocationButtonEnabled:true,
-        markers:  Set<Marker>.of(markers.values),
-        initialCameraPosition: _initialPosition,
-        onLongPress: (l) => _add(l),
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: Text('Şikayetim Var'),
-        icon: Icon(Icons.add),
-      ),
-    );
-  }
-
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
+    return MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider<AuthenticationRepository>(
+            create: (ctx) =>
+                AuthenticationRepository(FirebaseAuthenticationApiClient()),
+          ),
+        ],
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider<AuthenticationBloc>(
+                create: (_) => AuthenticationBloc(AuthenticationInitialState(),
+                    RepositoryProvider.of<AuthenticationRepository>(_))),
+          ],
+          child: MaterialApp(
+            theme: defaultTheme(),
+            title: 'Grumbler',
+            home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                builder: (ctx, state) {
+              if (state is AuthenticationUnauthenticated) {
+                return const SignInScreen();
+              }
+              if (state is AuthenticationAuthenticated) {
+                return const MapScreen();
+              }
+              return const SignInScreen();
+            }),
+          ),
+        ));
   }
 }
