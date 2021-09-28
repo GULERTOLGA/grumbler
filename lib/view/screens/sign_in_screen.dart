@@ -158,7 +158,8 @@ class _SignInScreenState extends State<SignInScreen> {
                 label: const Text("Google ile devam et"),
               ),
               ElevatedButton.icon(
-                onPressed: () => {},
+                onPressed: () => authenticationBloc
+                    .add(SignInEvent(authProvider: AuthProvider.facebook)),
                 style: ElevatedButton.styleFrom(
                     fixedSize: Size(box.maxWidth, buttonHeight),
                     primary: const Color(0xFF1877F2)),
