@@ -6,11 +6,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grumbler/bloc/location_bloc.dart';
 import 'package:grumbler/networking/authentication_api_client.dart';
 import 'package:grumbler/repository/authentication_repository.dart';
+import 'package:grumbler/repository/geocoding_repository.dart';
 import 'package:grumbler/view/screens/map_screen.dart';
 import 'package:grumbler/view/screens/sign_in_screen.dart';
 import 'package:grumbler/view/theme.dart';
 
 import 'bloc/authentication_bloc.dart';
+import 'bloc/internet_connection_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +34,9 @@ class GrumblerMainApp extends StatelessWidget {
             create: (ctx) =>
                 AuthenticationRepository(FirebaseAuthenticationApiClient()),
           ),
+          RepositoryProvider<IGeocodingRepository>(
+            create: (ctx) => GoogleGeoCodingRepository(),
+          ),
         ],
         child: MultiBlocProvider(
           providers: [
@@ -41,6 +46,13 @@ class GrumblerMainApp extends StatelessWidget {
             BlocProvider<LocationBloc>(
                 create: (_) => LocationBloc(LocationInitialState())
                   ..add(LocationStartedEvent())),
+            BlocProvider<InternetConnectionBloc>(
+              create: (context) {
+                return InternetConnectionBloc(
+                    InternetConnectionState(InternetConnection.unknown))
+                  ..add(InternetConnectionCheckEvent());
+              },
+            ),
           ],
           child: MaterialApp(
             theme: defaultTheme(),

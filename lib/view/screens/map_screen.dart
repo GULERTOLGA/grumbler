@@ -2,9 +2,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:grumbler/bloc/geocoding_bloc.dart';
 import 'package:grumbler/bloc/location_bloc.dart';
+import 'package:grumbler/repository/geocoding_repository.dart';
 import 'package:location/location.dart';
+import 'package:page_transition/page_transition.dart';
+
+import 'add_compliant_screen.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -23,7 +29,11 @@ class MapScreenState extends State<MapScreen> {
     zoom: 5,
   );
 
+  LatLng? _lastSelected;
+
+  // bloca taşınacak
   void _add(LatLng l) {
+    _lastSelected = l;
     var markerIdVal = "1";
     final MarkerId markerId = MarkerId(markerIdVal);
     final Marker marker = Marker(
@@ -83,12 +93,42 @@ class MapScreenState extends State<MapScreen> {
           },
         ),
         floatingActionButton: FloatingActionButton.extended(
-          onPressed:()=>null,
+          onPressed: () => _openComplaintScreen(context),
           label: const Text('Şikayetim Var'),
           icon: const Icon(Icons.add),
         ),
       ),
     );
+  }
+
+  Future<void> _openComplaintScreen(BuildContext context) async {
+    if (_lastSelected != null) {
+       Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.bottomToTop,
+            child: BlocProvider<GeocodingBloc>(
+                create: (ctx) => GeocodingBloc(GeocodingInitialState(),
+                    RepositoryProvider.of<IGeocodingRepository>(context))
+                  ..add(GeocodingLoadEvent(
+                      _lastSelected!.latitude, _lastSelected!.longitude)),
+                child: AddComplaintScreen(
+                  latLng: const LatLng(0, 0),
+                )),
+            inheritTheme: true,
+            ctx: context),
+      );
+    }else {
+      Fluttertoast.showToast(
+          msg: "Önce haritaya uzun tıklayarak bir konum seçiniz",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    }
   }
 
   Future<void> _goToLocation(double? latitude, double? longitude) async {
